@@ -117,7 +117,7 @@ aquí comienzan las ciencias cognitivas.
 
 la metáfora no termina de representar el fenómeno de la mente. Un computador antiguo puyede quedar obsoleto, pero la persona no (?)
 
-### conclusion
+### conclusión
 
 no tenemos idea de qué es la mente. Pero sabemos que tiene mucho que ver con el contexto y la materialidad.
 
