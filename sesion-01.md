@@ -1,5 +1,7 @@
 # sesion-01
 
+Desde la neurociencia hemos podido acceder a otras teorías a raíz de la evidencia.
+
 ¿qué es la mente?
 
 existen 3 modelos principalmente que explican cómo funciona la cognición
