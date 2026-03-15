@@ -1,4 +1,5 @@
-# diseno-y-neurociencia-humana-dis9870
+# dis9870-2026-1
+Diseno y Neurociencia Humana
 
 curso teórico práctico
 
