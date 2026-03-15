@@ -1,4 +1,5 @@
-# diseno-y-neurociencia-humana-dis9870
+# dis9870-2026-1
+Diseno y Neurociencia Humana
 
 curso teórico práctico
 
@@ -54,19 +55,5 @@ NO HAY EXAMEN.
 
 ### evaluaciones
 
-- 20% Marco 3E/4E (mapa 3E + crítica de evidencia)
-- 30% Prototipo + validación (MVP + protocolo + resultados)
-- 35% Dossier VIU Etapa 1 (plan trabajo + plan negocios + PI + stakeholders)
-- 15% Pitch + Q&A
-
-
-## bibliografía
-
-- Mobile Brain/Body Imaging
-  - [WEB](https://journals.sagepub.com/doi/abs/10.1177/10597123211072613)
-- Applied human neuroscience: Fostering and designing inclusive environments with the 3E-Cognition perspective
-  - [WEB](https://onlinelibrary.wiley.com/doi/abs/10.1111/ejn.16463)
-
-- The potential of neuroarchitecture and 4E-Cognition
-  - [WEB](https://onlinelibrary.wiley.com/doi/10.1111/ejn.16549)
-  - [PDF](./bibliografia/parada-potential-of-neuroarchitecture.pdf)
+- 20% marco 3E/4E()
+- 30% 
