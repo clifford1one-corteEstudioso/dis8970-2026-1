@@ -77,18 +77,44 @@ Los eyetracker modernos miden 3 cosas:
 - posición en Y de la mirada
 - dilatación de la pupila
 
-#### TMS Transmagnetic Cranial Stimulation
+### TMS Transmagnetic Cranial Stimulation
 
 Silvanus Thompson postulaba que se podría estimular áreas específicas del cerebro con ondas electromagnéticos.
 
 Con la llegada de la computación se le pudo dar uso a esta máquina.
 
-![](./imgs/tms.png)
+![esquema de TMS](./imgs/tms.png)
 
 Lo que permitió apuntar la bovina en lugares específicos, para estudiar los resultados que esto genera en el cerebro. Y también para lograr consecuencias específicas
 
 Se utiliza como tratamiento para la depresión
 
+### electroencefalografía (EEG)
+
+mide directamente la actividad eléctrica del cuerpo. Al ponerlo en el cerebro mide la actividad del cerebro.
+
+existen las invasivas(Electrocorticografía[ECoG]), se colocan al interior del tejido y las no invasivas(sobre la piel) este último se usa en contextos hospitalarios.
+
+los electrodos de registro, NO introducen electricidad, si no que la captan.
+
+## ¿cómo podemos utilizar esto?
+
+paradigmas tradicionales en neurociencia humana
+
+1. ambientes muy controlados
+2. complejidad muy reducida
+3. limitada validez ecológica: muchas veces los experimentos no son comparables con lo que se vive en la vida real y que se está estudiando.
+
+### MoBI: neuroimagen 2.0
+
+se abre la posibilidad real de estudiar el cerebro y cuerpo en situaciones reales, no tan controladas
+
+    - modelar dinámicas generada por el cerebro y cuerpo durante actividades y situaciones cotidianas, en el mundo real
+        - mediante la creación e implementación de sensores livianos y no obstrusivos.
+        - generando condiciones estructuradas, semi-estructuradas y no-estructuradas
+
 ## relevantes
 
 - [objetividad - humberto maturana](https://www.buscalibre.cl/libro-objetividad-un-argumento-para-obligar/9789569987281/p/52393843)
+
+- [JJ Gibson](https://en.wikipedia.org/wiki/James_J._Gibson)
