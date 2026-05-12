@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AccesoLibre</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.383.0/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      gap: 24px;
+    }
+
+    /* ── App container ── */
+    #app {
+      position: relative;
+      width: min(100%, 760px);
+      max-width: 760px;
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 28px 80px rgba(15, 23, 42, 0.12);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #app-header {
+      padding: 22px 20px 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    #app-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    /* ── Status bar ── */
+    #status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 22px 6px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      flex-shrink: 0;
+    }
+    #status-bar .time {
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #374151;
+    }
+    .signal-bars { display: flex; align-items: flex-end; gap: 3px; }
+    .signal-bars span {
+      width: 4px;
+      background: #374151;
+      border-radius: 2px;
+    }
+    .battery {
+      margin-left: 6px;
+      width: 16px;
+      height: 9px;
+      border: 1.5px solid #374151;
+      border-radius: 2px;
+      position: relative;
+    }
+    .battery::after {
+      content: '';
+      position: absolute;
+      inset: 1.5px 3px 1.5px 1.5px;
+      background: #374151;
+      border-radius: 1px;
+    }
+
+    /* ── Top bar ── */
+    #top-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #fff;
+      border-bottom: 2px solid #1f2937;
+      flex-shrink: 0;
+    }
+    .app-icon {
+      width: 32px; height: 32px;
+      border: 2px solid #1f2937;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .app-title { font-size: 13px; font-weight: 700; color: #111827; line-height: 1; }
+    .app-sub   { font-size: 10px; color: #6b7280; font-family: monospace; margin-top: 2px; }
+    .layers-btn {
+      margin-left: auto;
+      width: 32px; height: 32px;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; cursor: pointer;
+      transition: border-color .2s;
+    }
+    .layers-btn:hover { border-color: #374151; }
+
+    /* ── Hint bar ── */
+    #hint-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      flex-shrink: 0;
+    }
+    #hint-bar p { font-size: 10px; color: #6b7280; font-family: monospace; }
+
+    /* ── Map ── */
+    #map-area {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      overflow: hidden;
+      cursor: crosshair;
+      background: #f5f5f5;
+    }
+    #map-area svg { width: 100%; height: 100%; display: block; }
+
+    /* ── Markers ── */
+    .marker {
+      position: absolute;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -100%);
+      margin-top: -4px;
+    }
+    .marker-head {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .marker-head.pending { background: #fff; border-color: #6b7280; opacity: .75; }
+    .marker-head.confirmed { background: #1f2937; border-color: #111827; }
+    .marker-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .marker-dot.pending { background: #6b7280; }
+    .marker-dot.confirmed { background: #fff; }
+    .marker-stem { width: 2px; height: 8px; }
+    .marker-stem.pending { background: #6b7280; }
+    .marker-stem.confirmed { background: #1f2937; }
+
+    /* ── Modal overlay ── */
+    #modal-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.3);
+      display: flex; align-items: flex-end;
+      z-index: 30;
+    }
+    #modal-overlay.hidden { display: none; }
+    #modal-sheet {
+      width: 100%;
+      background: #fff;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      border-top: 2px solid #d1d5db;
+      box-shadow: 0 -8px 30px rgba(0,0,0,.15);
+      animation: slideUp .28s cubic-bezier(.22,1,.36,1) both;
+    }
+    .modal-handle-wrap { display: flex; justify-content: center; padding: 10px 0 4px; }
+    .modal-handle { width: 40px; height: 4px; background: #d1d5db; border-radius: 99px; }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 18px 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .modal-kicker {
+      font-size: 9px; font-family: monospace;
+      color: #9ca3af; text-transform: uppercase; letter-spacing: .1em;
+    }
+    .modal-title { font-size: 15px; font-weight: 700; color: #1f2937; margin-top: 3px; }
+    .close-btn {
+      width: 26px; height: 26px;
+      border: 1px solid #d1d5db; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: none; cursor: pointer; color: #6b7280;
+      transition: background .15s;
+      flex-shrink: 0;
+    }
+    .close-btn:hover { background: #f3f4f6; }
+    .modal-options { padding: 10px 14px; display: flex; flex-direction: column; gap: 7px; }
+    .alert-btn {
+      width: 100%; display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      border: 2px solid #e5e7eb; border-radius: 10px;
+      background: none; cursor: pointer; text-align: left;
+      transition: border-color .15s, background .15s;
+    }
+    .alert-btn:hover { border-color: #374151; background: #f9fafb; }
+    .alert-btn:active { transform: scale(.98); }
+    .alert-icon {
+      width: 32px; height: 32px;
+      border: 2px solid #d1d5db; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: border-color .15s;
+    }
+    .alert-btn:hover .alert-icon { border-color: #374151; }
+    .alert-label { font-size: 13px; font-weight: 500; color: #374151; flex: 1; line-height: 1.3; }
+    .alert-dot { width: 6px; height: 6px; border-radius: 50%; background: #d1d5db; transition: background .15s; }
+    .alert-btn:hover .alert-dot { background: #374151; }
+    .modal-footer {
+      text-align: center; font-size: 10px; font-family: monospace;
+      color: #9ca3af; padding: 4px 0 16px;
+    }
+    .modal-footer span { color: #4b5563; }
+
+    /* ── Toast ── */
+    #toast {
+      position: absolute; top: 54px; left: 50%; transform: translateX(-50%);
+      z-index: 40;
+      display: flex; align-items: center; gap: 7px;
+      background: #111827; color: #fff;
+      font-size: 11px; font-family: monospace;
+      padding: 8px 16px; border-radius: 99px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+      white-space: nowrap;
+      animation: fadeIn .22s ease both;
+    }
+    #toast.hidden { display: none; }
+    #toast span { color: #9ca3af; }
+
+    /* ── Bottom nav ── */
+    #bottom-nav {
+      display: flex; align-items: center; justify-content: space-around;
+      padding: 8px 20px;
+      background: #fff;
+      border-top: 2px solid #1f2937;
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 5px 12px; border-radius: 8px;
+      background: none; border: none; cursor: pointer;
+      transition: background .15s;
+    }
+    .nav-btn.active { background: #111827; }
+    .nav-btn:not(.active):hover { background: #f3f4f6; }
+    .nav-label { font-size: 9px; font-family: monospace; font-weight: 700; }
+    .nav-btn.active .nav-label { color: #fff; }
+    .nav-btn:not(.active) .nav-label { color: #6b7280; }
+
+    /* ── Annotations ── */
+    #annotations {
+      display: flex; flex-direction: column; gap: 14px;
+      max-width: 160px;
+    }
+    .annotation {
+      font-size: 11px; font-family: monospace; color: #9ca3af;
+      line-height: 1.5;
+      border-left: 2px dashed #d1d5db;
+      padding-left: 8px;
+    }
+
+    /* ── Animations ── */
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* ── Lucide icon helper ── */
+    [data-lucide] { display: block; }
+
+    @media (max-width: 600px) {
+      #annotations { display: none; }
+      body { padding: 0; align-items: flex-start; }
+      #phone { border-radius: 0; width: 100%; height: 100dvh; border: none; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <div id="app-header">
+    <div id="app-title">AccesoLibre</div>
+  </div>
+
+  <!-- Hint bar -->
+  <div id="hint-bar">
+    <i data-lucide="map-pin" style="width:12px;height:12px;color:#9ca3af;flex-shrink:0;"></i>
+    <p>Toca el mapa para reportar un obstáculo</p>
+  </div>
+
+  <!-- Map area -->
+  <div id="map-area">
+    <svg viewBox="0 0 360 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <!-- bg -->
+      <rect width="360" height="520" fill="#e8e8e8"/>
+      <!-- blocks row 1 -->
+      <rect x="10"  y="10"  width="110" height="80" fill="#d4d4d4" rx="2"/>
+      <rect x="130" y="10"  width="100" height="80" fill="#d4d4d4" rx="2"/>
+      <rect x="240" y="10"  width="110" height="80" fill="#d4d4d4" rx="2"/>
+      <!-- blocks row 2 -->
+      <rect x="10"  y="110" width="70"  height="100" fill="#d4d4d4" rx="2"/>
+      <rect x="90"  y="110" width="100" height="100" fill="#d4d4d4" rx="2"/>
+      <rect x="200" y="110" width="80"  height="100" fill="#d4d4d4" rx="2"/>
+      <rect x="290" y="110" width="60"  height="100" fill="#d4d4d4" rx="2"/>
+      <!-- blocks row 3 -->
+      <rect x="10"  y="230" width="130" height="90" fill="#d4d4d4" rx="2"/>
+      <rect x="150" y="230" width="90"  height="90" fill="#d4d4d4" rx="2"/>
+      <rect x="250" y="230" width="100" height="90" fill="#d4d4d4" rx="2"/>
+      <!-- blocks row 4 -->
+      <rect x="10"  y="340" width="80"  height="100" fill="#d4d4d4" rx="2"/>
+      <rect x="100" y="340" width="120" height="100" fill="#d4d4d4" rx="2"/>
+      <rect x="230" y="340" width="120" height="100" fill="#d4d4d4" rx="2"/>
+      <!-- blocks row 5 -->
+      <rect x="10"  y="460" width="100" height="50" fill="#d4d4d4" rx="2"/>
+      <rect x="120" y="460" width="130" height="50" fill="#d4d4d4" rx="2"/>
+      <rect x="260" y="460" width="90"  height="50" fill="#d4d4d4" rx="2"/>
+      <!-- horizontal streets -->
+      <rect x="0" y="96"  width="360" height="12" fill="#f5f5f5"/>
+      <rect x="0" y="216" width="360" height="12" fill="#f5f5f5"/>
+      <rect x="0" y="326" width="360" height="12" fill="#f5f5f5"/>
+      <rect x="0" y="448" width="360" height="12" fill="#f5f5f5"/>
+      <!-- vertical streets -->
+      <rect x="120" y="0" width="10" height="520" fill="#f5f5f5"/>
+      <rect x="240" y="0" width="10" height="520" fill="#f5f5f5"/>
+      <!-- zebra 1 -->
+      <rect x="120" y="96" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="126" y="96" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="132" y="96" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="138" y="96" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="144" y="96" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="150" y="96" width="3" height="12" fill="#d0d0d0"/>
+      <!-- zebra 2 -->
+      <rect x="240" y="216" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="246" y="216" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="252" y="216" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="258" y="216" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="264" y="216" width="3" height="12" fill="#d0d0d0"/>
+      <rect x="270" y="216" width="3" height="12" fill="#d0d0d0"/>
+      <!-- user position -->
+      <circle cx="180" cy="222" r="6"  fill="none" stroke="#555" stroke-width="2"/>
+      <circle cx="180" cy="222" r="2.5" fill="#555"/>
+      <circle cx="180" cy="222" r="10" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="2 2"/>
+    </svg>
+
+    <!-- Markers injected here by JS -->
+
+    <!-- Modal overlay -->
+    <div id="modal-overlay" class="hidden">
+      <div id="modal-sheet">
+        <div class="modal-handle-wrap"><div class="modal-handle"></div></div>
+        <div class="modal-header">
+          <div>
+            <div class="modal-kicker">AccesoLibre · Reporte</div>
+            <div class="modal-title">¿Qué problema encontraste?</div>
+          </div>
+          <button class="close-btn" id="close-modal">
+            <i data-lucide="x" style="width:13px;height:13px;"></i>
+          </button>
+        </div>
+        <div class="modal-options" id="modal-options">
+          <!-- buttons injected by JS -->
+        </div>
+        <div class="modal-footer">Tu reporte ayuda a otros usuarios · <span>Anónimo</span></div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="hidden">
+      <i data-lucide="check-circle" style="width:13px;height:13px;color:#9ca3af;"></i>
+      <span id="toast-text"></span>
+    </div>
+
+  </div><!-- /map-area -->
+
+</div>
+
+  <div class="annotation">← Toca el mapa para colocar un marcador</div>
+  <div class="annotation">← Selecciona el tipo de alerta en el modal</div>
+  <div class="annotation">← Los marcadores persisten en el mapa</div>
+</div>
+
+<script>
+  // ── Init Lucide icons ──
+  lucide.createIcons();
+
+  // ── Data ──
+  const ALERTS = [
+    { id: "vereda",   icon: "alert-triangle",  label: "Vereda en mal estado"       },
+    { id: "rampa",    icon: "arrow-up-right",   label: "Rampa con mal ángulo"       },
+    { id: "obstaculo",icon: "trash-2",          label: "Obstáculo en el camino"     },
+    { id: "ascensor", icon: "accessibility",    label: "Ascensor fuera de servicio" },
+    { id: "cruce",    icon: "navigation",       label: "Cruce no accesible"         },
+  ];
+
+  // ── State ──
+  let pendingPos = null;
+  let toastTimer = null;
+
+  // ── DOM refs ──
+  const mapArea      = document.getElementById("map-area");
+  const modalOverlay = document.getElementById("modal-overlay");
+  const modalOptions = document.getElementById("modal-options");
+  const closeBtn     = document.getElementById("close-modal");
+  const toastEl      = document.getElementById("toast");
+  const toastText    = document.getElementById("toast-text");
+
+  // ── Build modal buttons ──
+  ALERTS.forEach(({ id, icon, label }) => {
+    const btn = document.createElement("button");
+    btn.className = "alert-btn";
+    btn.dataset.id = id;
+    btn.innerHTML = `
+      <div class="alert-icon">
+        <i data-lucide="${icon}" style="width:16px;height:16px;color:#6b7280;"></i>
+      </div>
+      <span class="alert-label">${label}</span>
+      <div class="alert-dot"></div>
+    `;
+    btn.addEventListener("click", () => selectAlert(id, label));
+    modalOptions.appendChild(btn);
+  });
+  lucide.createIcons();
+
+  // ── Map click ──
+  mapArea.addEventListener("click", (e) => {
+    if (!modalOverlay.classList.contains("hidden")) return;
+    const rect = mapArea.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    pendingPos = { x, y };
+    addMarker(x, y, false, "pending-marker");
+    openModal();
+  });
+
+  // ── Add marker ──
+  function addMarker(x, y, confirmed, id) {
+    // remove old pending if exists
+    if (id) {
+      const old = document.getElementById(id);
+      if (old) old.remove();
+    }
+    const m = document.createElement("div");
+    m.className = "marker";
+    if (id) m.id = id;
+    m.style.left = x + "px";
+    m.style.top  = y + "px";
+    const state = confirmed ? "confirmed" : "pending";
+    m.innerHTML = `
+      <div class="marker-head ${state}">
+        <div class="marker-dot ${state}"></div>
+      </div>
+      <div class="marker-stem ${state}"></div>
+    `;
+    mapArea.appendChild(m);
+    return m;
+  }
+
+  // ── Open / close modal ──
+  function openModal() {
+    modalOverlay.classList.remove("hidden");
+    // re-trigger animation
+    const sheet = document.getElementById("modal-sheet");
+    sheet.style.animation = "none";
+    sheet.offsetHeight; // reflow
+    sheet.style.animation = "";
+    lucide.createIcons();
+  }
+  function closeModal() {
+    modalOverlay.classList.add("hidden");
+    const pm = document.getElementById("pending-marker");
+    if (pm) pm.remove();
+    pendingPos = null;
+  }
+
+  closeBtn.addEventListener("click", closeModal);
+  modalOverlay.addEventListener("click", (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  // ── Select alert ──
+  function selectAlert(id, label) {
+    modalOverlay.classList.add("hidden");
+    if (pendingPos) {
+      addMarker(pendingPos.x, pendingPos.y, true, null);
+      const pm = document.getElementById("pending-marker");
+      if (pm) pm.remove();
+      pendingPos = null;
+    }
+    showToast("Alerta enviada · " + label);
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    toastText.textContent = msg;
+    toastEl.classList.remove("hidden");
+    toastEl.style.animation = "none";
+    toastEl.offsetHeight;
+    toastEl.style.animation = "fadeIn .22s ease both";
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.add("hidden"), 2800);
+  }
+</script>
+</body>
+</html>
