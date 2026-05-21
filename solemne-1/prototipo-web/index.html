@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NavInclusiva — Ciudades para todos</title>
@@ -1159,5 +1160,143 @@
     `;
     document.head.appendChild(style);
   </script>
+=======
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccesoLibre - Wireframe</title>
+    <!-- Tailwind para estilos rápidos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js para interactividad simple (sin errores de Babel) -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .map-pattern {
+            background-color: #e5e7eb;
+            background-image:  linear-gradient(#d1d5db 1px, transparent 1px), linear-gradient(90deg, #d1d5db 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-200 flex justify-center items-center min-h-screen font-sans">
+
+    <!-- Contenedor del Celular -->
+    <div x-data="app()" class="w-[360px] h-[640px] bg-white border-[8px] border-gray-800 rounded-[40px] shadow-2xl overflow-hidden relative flex flex-col">
+        
+        <!-- Header -->
+        <header class="p-4 pt-8 border-b border-gray-300 flex justify-between items-center bg-white z-10">
+            <h1 class="font-bold text-gray-800 tracking-tighter">ACCESOLIBRE</h1>
+            <div class="w-6 h-6 border-2 border-gray-400 rounded-full"></div>
+        </header>
+
+        <!-- Mapa Interactivo -->
+        <main 
+            @click="openModal($event)" 
+            class="flex-1 map-pattern relative cursor-crosshair overflow-hidden"
+        >
+            <!-- Calles decorativas -->
+            <div class="absolute top-1/3 w-full h-10 bg-gray-300/50"></div>
+            <div class="absolute left-1/4 h-full w-10 bg-gray-300/50"></div>
+
+            <!-- Marcadores renderizados -->
+            <template x-for="(marker, index) in markers" :key="index">
+                <div 
+                    class="absolute transform -translate-x-1/2 -translate-y-full transition-all"
+                    :style="`left: ${marker.x}%; top: ${marker.y}%;`"
+                >
+                    <svg class="w-8 h-8 text-black" viewBox="0 0 24 24" fill="currentColor" stroke="white" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3" fill="white"></circle>
+                    </svg>
+                </div>
+            </template>
+
+            <!-- Instrucción flotante -->
+            <div class="absolute bottom-4 left-4 right-4 bg-white/90 p-2 border border-gray-400 rounded text-[11px] text-gray-600 text-center">
+                Haz clic en el mapa para reportar obstáculo
+            </div>
+        </main>
+
+        <!-- Modal de Reporte (Pop-up) -->
+        <div x-show="showModal" 
+             x-cloak
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="translate-y-full"
+             x-transition:enter-end="translate-y-0"
+             class="absolute inset-0 bg-black/40 z-20 flex items-end">
+            
+            <div @click.away="showModal = false" class="bg-white w-full rounded-t-3xl p-6 border-t-4 border-gray-800">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-lg">Tipo de Riesgo</h2>
+                    <button @click="showModal = false" class="text-gray-400 text-2xl">&times;</button>
+                </div>
+
+                <div class="space-y-2">
+                    <template x-for="opcion in opciones" :key="opcion">
+                        <button 
+                            @click="addMarker(opcion)"
+                            class="w-full text-left p-4 border-2 border-gray-200 rounded-xl hover:bg-gray-800 hover:text-white transition-colors flex justify-between items-center"
+                        >
+                            <span x-text="opcion" class="font-medium text-sm"></span>
+                            <span>→</span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast de éxito -->
+        <div x-show="showToast" 
+             x-cloak
+             class="absolute top-20 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-2 rounded-full shadow-xl text-sm z-30">
+            ✓ Alerta enviada
+        </div>
+
+        <!-- Barra navegación inferior -->
+        <nav class="h-16 border-t border-gray-300 flex justify-around items-center bg-white">
+            <div class="w-6 h-6 border-2 border-gray-400 rounded"></div>
+            <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center">
+                <div class="w-4 h-4 bg-white rounded-sm"></div>
+            </div>
+            <div class="w-6 h-6 border-2 border-gray-400 rounded-full"></div>
+        </nav>
+    </div>
+
+    <script>
+        function app() {
+            return {
+                markers: [],
+                showModal: false,
+                showToast: false,
+                tempCoords: { x: 0, y: 0 },
+                opciones: [
+                    "Vereda en mal estado",
+                    "Rampa con mal ángulo",
+                    "Obstáculo en el camino",
+                    "Ascensor fuera de servicio",
+                    "Cruce no accesible"
+                ],
+                openModal(e) {
+                    // Calcular posición relativa al mapa
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    this.tempCoords = {
+                        x: ((e.clientX - rect.left) / rect.width) * 100,
+                        y: ((e.clientY - rect.top) / rect.height) * 100
+                    };
+                    this.showModal = true;
+                },
+                addMarker(tipo) {
+                    this.markers.push({
+                        x: this.tempCoords.x,
+                        y: this.tempCoords.y,
+                        tipo: tipo
+                    });
+                    this.showModal = false;
+                    this.showToast = true;
+                    setTimeout(() => this.showToast = false, 2000);
+                }
+            }
+        }
+    </script>
+>>>>>>> 158289a9cb866b89e119a4e5e80207daf8d5f67d
 </body>
 </html>
