@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NavInclusiva — Ciudades para todos</title>
+  <style>
+    /* =============================================
+       VARIABLES Y RESET
+    ============================================= */
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --accent: #00e5a0;
+      --accent2: #00b8d4;
+      --accent3: #ff6b6b;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --border: rgba(255,255,255,0.08);
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --radius: 16px;
+      --radius-sm: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #0d1117 !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      font-weight: 500 !important;
+      transition: transform 0.2s, box-shadow 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,229,160,0.35) !important;
+      color: #0d1117 !important;
+    }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* fondo animado */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 30%, rgba(0,229,160,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 70%, rgba(0,184,212,0.10) 0%, transparent 70%);
+      animation: pulse-bg 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-bg {
+      from { opacity: 0.6; }
+      to   { opacity: 1; }
+    }
+
+    /* grid de puntos */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,229,160,0.12);
+      border: 1px solid rgba(0,229,160,0.3);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 .highlight {
+      color: var(--accent);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-desc {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: #0d1117;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,229,160,0.4);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent2);
+      background: rgba(0,184,212,0.08);
+    }
+
+    /* =============================================
+       SECCIÓN GENÉRICA
+    ============================================= */
+    section {
+      padding: 6rem 2rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 620px;
+      line-height: 1.75;
+    }
+
+    /* =============================================
+       PROBLEMA
+    ============================================= */
+    #problema { background: var(--surface); }
+
+    .problema-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin-top: 3.5rem;
+    }
+
+    .problema-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,229,160,0.3);
+    }
+
+    .stat-card .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .problema-quote {
+      background: linear-gradient(135deg, rgba(0,229,160,0.08), rgba(0,184,212,0.06));
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* =============================================
+       USUARIOS
+    ============================================= */
+    .usuarios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .user-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+
+    .user-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(0,229,160,0.25);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    .user-icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .user-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .user-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* =============================================
+       SOLUCIÓN
+    ============================================= */
+    #solucion { background: var(--surface); }
+
+    .app-mockup {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-mockup::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,229,160,0.15), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .mock-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mock-dots { display: flex; gap: 6px; }
+    .mock-dots span {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .mock-dots span:nth-child(1) { background: #ff5f57; }
+    .mock-dots span:nth-child(2) { background: #ffbd2e; }
+    .mock-dots span:nth-child(3) { background: #28ca41; }
+
+    .mock-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* mapa simulado */
+    .fake-map {
+      background: #1a2535;
+      border-radius: var(--radius-sm);
+      height: 220px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .fake-map svg { width: 100%; height: 100%; }
+
+    .map-pin {
+      position: absolute;
+      font-size: 1.5rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .map-pin.pin-a { top: 30px; left: 60px; }
+    .map-pin.pin-b { bottom: 30px; right: 60px; animation-delay: 0.5s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    .route-line {
+      position: absolute;
+      top: 50%; left: 15%;
+      width: 70%; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      transform: translateY(-50%) rotate(-8deg);
+      box-shadow: 0 0 12px rgba(0,229,160,0.5);
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      background: rgba(0,229,160,0.05);
+      border: 1px solid rgba(0,229,160,0.12);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .feature-item .fi-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .feature-item strong { display: block; color: var(--text); font-size: 0.8rem; margin-bottom: 0.2rem; }
+    .feature-item span { color: var(--text-muted); font-size: 0.78rem; }
+
+    .solucion-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-top: 3.5rem;
+    }
+
+    /* =============================================
+       IMPACTO
+    ============================================= */
+    .impacto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .impacto-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .impacto-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,184,212,0.3);
+    }
+
+    .impacto-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      background: rgba(0,229,160,0.1);
+    }
+
+    .impacto-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .impacto-card p  { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* =============================================
+       MARCO LEGAL
+    ============================================= */
+    #legal { background: var(--surface); }
+
+    .legal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .legal-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .legal-card:hover {
+      border-color: rgba(255,107,107,0.4);
+      transform: translateY(-4px);
+    }
+
+    .legal-tag {
+      display: inline-block;
+      background: rgba(255,107,107,0.12);
+      color: var(--accent3);
+      border: 1px solid rgba(255,107,107,0.25);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .legal-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .legal-card p  { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* =============================================
+       VALIDACIÓN
+    ============================================= */
+    .validacion-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 3rem;
+      max-width: 700px;
+    }
+
+    .val-step {
+      display: flex;
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .val-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 44px;
+      width: 2px;
+      height: calc(100% - 20px);
+      background: var(--border);
+    }
+
+    .val-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1rem;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .val-content {
+      padding: 0.2rem 0 2rem;
+    }
+
+    .val-content h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .val-content p  { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* =============================================
+       CTA FINAL
+    ============================================= */
+    #cta {
+      text-align: center;
+      padding: 8rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,229,160,0.1) 0%, transparent 70%);
+    }
+
+    #cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .cta-inner h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+
+    .cta-inner p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* =============================================
+       ANIMACIONES SCROLL REVEAL
+    ============================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* stagger para hijos */
+    .stagger > * { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay: 0.05s; }
+    .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay: 0.15s; }
+    .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay: 0.25s; }
+    .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay: 0.35s; }
+    .stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay: 0.45s; }
+    .stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay: 0.55s; }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 768px) {
+      nav { padding: 1rem; }
+      .nav-links { display: none; }
+
+      .problema-grid,
+      .solucion-layout { grid-template-columns: 1fr; }
+
+      .feature-list { grid-template-columns: 1fr; }
+
+      .problema-visual { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-actions { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav>
+    <div class="nav-logo">♿ NavInclusiva</div>
+    <ul class="nav-links">
+      <li><a href="#problema">Problema</a></li>
+      <li><a href="#solucion">Solución</a></li>
+      <li><a href="#impacto">Impacto</a></li>
+      <li><a href="#legal">Marco legal</a></li>
+      <li><a href="#cta" class="nav-cta">Ver demo</a></li>
+    </ul>
+  </nav>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero" id="inicio">
+    <div class="hero-inner">
+      <div class="hero-badge">♿ Movilidad · Inclusión · Ciudad</div>
+      <h1>
+        Navega la ciudad<br>
+        <span class="highlight">sin barreras.</span>
+      </h1>
+      <p class="hero-desc">
+        Una app de navegación diseñada para que todas las personas puedan moverse con
+        autonomía, seguridad y dignidad por sus ciudades — porque el problema no es la
+        persona, es el entorno.
+      </p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn-primary">
+          <span>▶</span> Ver demo
+        </a>
+        <a href="#solucion" class="btn-secondary">
+          Conocer más →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PROBLEMA ==================== -->
+  <section id="problema">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">El problema</span>
+        <h2 class="section-title">La discapacidad es situacional,<br>no personal</h2>
+        <p class="section-desc">
+          La discapacidad no reside en las personas — reside en los entornos mal diseñados.
+          Un escalón sin rampa, una vereda rota, un semáforo sin audio: todos estos son
+          fallos del espacio urbano que excluyen a millones de personas cada día.
+        </p>
+        <div class="problema-quote">
+          "El modelo social de la discapacidad plantea que las barreras son externas al individuo.
+          Una ciudad accesible no es un privilegio, es un derecho."
+        </div>
+      </div>
+      <div class="problema-grid reveal">
+        <div>
+          <p style="color:var(--text-muted); line-height:1.8; font-size:0.95rem;">
+            Millones de personas enfrentan diariamente obstáculos invisibles al planificar sus desplazamientos.
+            La falta de información accesible, centralizada y en tiempo real sobre el estado de la infraestructura
+            urbana genera situaciones de estrés, inseguridad y exclusión.<br><br>
+            No hay una sola plataforma que integre rampas, ascensores, superficies, semáforos sonoros
+            y obstáculos temporales de forma colaborativa y verificada.
+          </p>
+        </div>
+        <div class="problema-visual stagger">
+          <div class="stat-card">
+            <span class="stat-num">15%</span>
+            <span class="stat-label">de la población mundial vive con alguna discapacidad</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">+40%</span>
+            <span class="stat-label">de adultos mayores reportan dificultades al moverse en la ciudad</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">80%</span>
+            <span class="stat-label">de la discapacidad puede mitigarse con entornos bien diseñados</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">1 de 4</span>
+            <span class="stat-label">personas experimenta discapacidad situacional en algún momento</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== USUARIOS ==================== -->
+  <section id="usuarios">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Usuarios objetivo</span>
+        <h2 class="section-title">Diseñado para quienes<br>la ciudad ignoró</h2>
+        <p class="section-desc">
+          NavInclusiva sirve a cualquier persona cuya movilidad depende del entorno.
+          Porque la accesibilidad beneficia a todos.
+        </p>
+      </div>
+      <div class="usuarios-grid stagger">
+        <div class="user-card">
+          <span class="user-icon">♿</span>
+          <h3>Silla de ruedas</h3>
+          <p>Personas con movilidad reducida que necesitan rutas 100% sin barreras arquitectónicas.</p>
+        </div>
+        <div class="user-card">
+          <span class="user-icon">🧓</span>
+          <h3>Adultos mayores</h3>
+          <p>Personas que requieren superficies estables, pendientes suaves y descansos en el camino.</p>
+        </div>
+        <div class="user-card">
+          <span class="user-icon">👶</span>
+          <h3>Padres con coche</h3>
+          <p>Familias con carritos de bebé que enfrentan las mismas barreras que una silla de ruedas.</p>
+        </div>
+        <div class="user-card">
+          <span class="user-icon">🚲</span>
+          <h3>Ciclistas</h3>
+          <p>Usuarios de bicicleta que necesitan infraestructura segura y rutas sin obstáculos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SOLUCIÓN ==================== -->
+  <section id="solucion">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">La solución</span>
+        <h2 class="section-title">Navegación accesible,<br>en tiempo real</h2>
+        <p class="section-desc">
+          Una app que pone al usuario en el centro. NavInclusiva combina datos geoespaciales,
+          reportes ciudadanos y rutas optimizadas para crear una experiencia de navegación
+          verdaderamente inclusiva.
+        </p>
+      </div>
+
+      <div class="solucion-layout">
+        <!-- mockup app -->
+        <div class="app-mockup reveal">
+          <div class="mock-header">
+            <div class="mock-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="mock-title">NavInclusiva · Mapa accesible</span>
+          </div>
+          <!-- mapa simulado -->
+          <div class="fake-map">
+            <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+              <!-- calles -->
+              <line x1="0" y1="110" x2="400" y2="110" stroke="rgba(255,255,255,0.05)" stroke-width="18"/>
+              <line x1="200" y1="0"  x2="200" y2="220" stroke="rgba(255,255,255,0.05)" stroke-width="18"/>
+              <line x1="0"   y1="55" x2="400" y2="55"  stroke="rgba(255,255,255,0.03)" stroke-width="10"/>
+              <line x1="0"   y1="165" x2="400" y2="165" stroke="rgba(255,255,255,0.03)" stroke-width="10"/>
+              <!-- ruta -->
+              <path d="M 70 50 Q 200 50 200 110 Q 200 170 330 170"
+                    stroke="url(#grad)" stroke-width="4" fill="none" stroke-linecap="round"
+                    stroke-dasharray="8 4" style="animation: dash 2s linear infinite;"/>
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"   stop-color="#00e5a0"/>
+                  <stop offset="100%" stop-color="#00b8d4"/>
+                </linearGradient>
+              </defs>
+              <!-- rampas -->
+              <circle cx="200" cy="110" r="6" fill="#00e5a0" opacity="0.8"/>
+              <circle cx="130" cy="50"  r="5" fill="#00e5a0" opacity="0.6"/>
+              <circle cx="270" cy="170" r="5" fill="#00e5a0" opacity="0.6"/>
+              <!-- alerta -->
+              <circle cx="160" cy="170" r="6" fill="#ff6b6b" opacity="0.8"/>
+            </svg>
+            <div class="map-pin pin-a">📍</div>
+            <div class="map-pin pin-b">🏁</div>
+          </div>
+
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="fi-icon">🛤️</span>
+              <div>
+                <strong>Rutas optimizadas</strong>
+                <span>Según perfil de movilidad del usuario</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="fi-icon">🗺️</span>
+              <div>
+                <strong>Mapa de infraestructura</strong>
+                <span>Rampas, ascensores, superficies</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="fi-icon">⚡</span>
+              <div>
+                <strong>Reportes en tiempo real</strong>
+                <span>Obstáculos y obstrucciones activas</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="fi-icon">🤝</span>
+              <div>
+                <strong>Participación ciudadana</strong>
+                <span>Comunidad que actualiza el mapa</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- texto solución -->
+        <div class="reveal">
+          <h3 style="font-family: var(--font-display); font-size:1.5rem; font-weight:700; margin-bottom:1.5rem; letter-spacing:-0.01em;">
+            Cómo funciona
+          </h3>
+          <div style="display:flex; flex-direction:column; gap:1.25rem;">
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.3);display:grid;place-items:center;font-size:1rem;flex-shrink:0;">1</div>
+              <div>
+                <strong style="display:block;margin-bottom:0.25rem;">Ingresa tu perfil de movilidad</strong>
+                <span style="color:var(--text-muted);font-size:0.875rem;">Silla de ruedas, caminante, ciclista o carrito — la app adapta todo en función de tus necesidades.</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.3);display:grid;place-items:center;font-size:1rem;flex-shrink:0;">2</div>
+              <div>
+                <strong style="display:block;margin-bottom:0.25rem;">Elige origen y destino</strong>
+                <span style="color:var(--text-muted);font-size:0.875rem;">NavInclusiva calcula la ruta más accesible, no solo la más rápida. Evita escaleras, superficies irregulares y zonas conflictivas.</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.3);display:grid;place-items:center;font-size:1rem;flex-shrink:0;">3</div>
+              <div>
+                <strong style="display:block;margin-bottom:0.25rem;">Navega con información en vivo</strong>
+                <span style="color:var(--text-muted);font-size:0.875rem;">Alertas de obstáculos temporales, obras en curso y reportes de otros usuarios en tiempo real.</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.3);display:grid;place-items:center;font-size:1rem;flex-shrink:0;">4</div>
+              <div>
+                <strong style="display:block;margin-bottom:0.25rem;">Contribuye a la comunidad</strong>
+                <span style="color:var(--text-muted);font-size:0.875rem;">Reporta barreras, valida información existente y ayuda a construir el mapa accesible de tu ciudad.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== IMPACTO ==================== -->
+  <section id="impacto">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Impacto</span>
+        <h2 class="section-title">Beneficios concretos<br>para personas y ciudades</h2>
+        <p class="section-desc">
+          NavInclusiva no es solo una app: es infraestructura social que mejora la calidad
+          de vida de quienes más lo necesitan y empuja a las ciudades hacia la inclusión real.
+        </p>
+      </div>
+      <div class="impacto-grid stagger">
+        <div class="impacto-card">
+          <div class="impacto-icon">⏱️</div>
+          <div>
+            <h3>Menos tiempo, menos estrés</h3>
+            <p>Rutas planificadas de antemano reducen la incertidumbre y el tiempo de desplazamiento en hasta un 40%.</p>
+          </div>
+        </div>
+        <div class="impacto-card">
+          <div class="impacto-icon">🛡️</div>
+          <div>
+            <h3>Mayor seguridad</h3>
+            <p>Información sobre superficies y obstáculos previene caídas y accidentes en el trayecto.</p>
+          </div>
+        </div>
+        <div class="impacto-card">
+          <div class="impacto-icon">🌍</div>
+          <div>
+            <h3>Autonomía real</h3>
+            <p>Las personas con discapacidad pueden planificar sus viajes sin depender de terceros.</p>
+          </div>
+        </div>
+        <div class="impacto-card">
+          <div class="impacto-icon">🏙️</div>
+          <div>
+            <h3>Ciudades más inclusivas</h3>
+            <p>Los datos generados por la app revelan brechas de infraestructura a municipios y planificadores.</p>
+          </div>
+        </div>
+        <div class="impacto-card">
+          <div class="impacto-icon">🤝</div>
+          <div>
+            <h3>Participación ciudadana</h3>
+            <p>La comunidad construye colectivamente el mapa accesible, generando sentido de pertenencia.</p>
+          </div>
+        </div>
+        <div class="impacto-card">
+          <div class="impacto-icon">📊</div>
+          <div>
+            <h3>Datos para políticas públicas</h3>
+            <p>Reportes agregados ayudan a priorizar inversión en accesibilidad urbana con evidencia real.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MARCO LEGAL ==================== -->
+  <section id="legal">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Marco legal · Chile</span>
+        <h2 class="section-title">Respaldada por la ley,<br>construida para cumplirla</h2>
+        <p class="section-desc">
+          NavInclusiva opera bajo el marco normativo chileno en materia de discapacidad
+          e inclusión, y contribuye activamente a su cumplimiento.
+        </p>
+      </div>
+      <div class="legal-grid stagger">
+        <div class="legal-card">
+          <span class="legal-tag">Ley 20.422</span>
+          <h3>Normas sobre igualdad de oportunidades e inclusión social</h3>
+          <p>Establece el derecho de las personas con discapacidad a acceder y usar los bienes y servicios de la sociedad sin barreras. NavInclusiva es una herramienta directa para ejercer este derecho en el espacio urbano.</p>
+        </div>
+        <div class="legal-card">
+          <span class="legal-tag">Ley 21.015</span>
+          <h3>Incentiva la inclusión de personas con discapacidad</h3>
+          <p>Obliga a empresas con 100 o más trabajadores a contratar al menos un 1% de personas con discapacidad. NavInclusiva facilita su movilidad cotidiana al lugar de trabajo.</p>
+        </div>
+        <div class="legal-card">
+          <span class="legal-tag">DS 40</span>
+          <h3>Accesibilidad universal en obras de edificación</h3>
+          <p>Regula estándares mínimos de accesibilidad en construcción. La app ayuda a identificar dónde estas normas no se cumplen en el espacio público y lo hace visible para las autoridades.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VALIDACIÓN ==================== -->
+  <section id="validacion">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Validación</span>
+        <h2 class="section-title">¿Cómo mediremos<br>el éxito?</h2>
+        <p class="section-desc">
+          La validación combina métodos cuantitativos y cualitativos para garantizar
+          que la app realmente mejora la experiencia de las personas.
+        </p>
+      </div>
+      <div class="validacion-steps reveal">
+        <div class="val-step">
+          <div class="val-num">1</div>
+          <div class="val-content">
+            <h3>Test de usabilidad</h3>
+            <p>Sesiones con usuarios reales pertenecientes a cada grupo objetivo. Medición de tasa de éxito en tareas, número de errores y tiempo de completación. Escala SUS (System Usability Scale).</p>
+          </div>
+        </div>
+        <div class="val-step">
+          <div class="val-num">2</div>
+          <div class="val-content">
+            <h3>Estrés percibido</h3>
+            <p>Aplicación de la escala PSS (Perceived Stress Scale) antes y después de usar la app en un trayecto real. Comparación con navegación sin la herramienta.</p>
+          </div>
+        </div>
+        <div class="val-step">
+          <div class="val-num">3</div>
+          <div class="val-content">
+            <h3>Observación en contexto real</h3>
+            <p>Acompañamiento en terreno a usuarios mientras navegan con la app. Registro etnográfico de comportamientos, dificultades y momentos de satisfacción.</p>
+          </div>
+        </div>
+        <div class="val-step">
+          <div class="val-num">4</div>
+          <div class="val-content">
+            <h3>Precisión del mapa</h3>
+            <p>Verificación en campo de los datos de infraestructura (rampas, ascensores, estado de superficies) versus la información reportada en la plataforma.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA ==================== -->
+  <section id="cta">
+    <div class="container">
+      <div class="cta-inner reveal">
+        <h2>La ciudad es de<br><span style="color:var(--accent)">todas las personas.</span></h2>
+        <p>
+          NavInclusiva está en desarrollo activo. Si quieres ver la demo,
+          colaborar en el proyecto o explorar alianzas, escríbenos.
+        </p>
+        <div class="hero-actions">
+          <a href="mailto:hola@navinclusiva.cl" class="btn-primary">
+            <span>✉️</span> Contactar al equipo
+          </a>
+          <a href="#" class="btn-secondary">
+            Ver demo interactiva →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <p>
+      <strong style="color:var(--text);">NavInclusiva</strong> · Proyecto de diseño inclusivo ·
+      Hecho con ♿ para que la ciudad sea de todos.
+      <br>
+      <span style="opacity:0.5; font-size:0.78rem;">
+        Enmarcado en la <a href="#">Ley 20.422</a>, la <a href="#">Ley 21.015</a> y el <a href="#">DS 40</a> — Chile.
+      </span>
+    </p>
+  </footer>
+
+  <!-- ==================== SCROLL REVEAL JS ==================== -->
+  <script>
+    // Intersection Observer para animar elementos al hacer scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal, .stagger').forEach(el => observer.observe(el));
+
+    // Navbar shrink on scroll
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      nav.style.padding = window.scrollY > 60 ? '0.6rem 2rem' : '1rem 2rem';
+    });
+
+    // Animación del dasharray del SVG
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes dash {
+        to { stroke-dashoffset: -24; }
+      }
+      svg path { stroke-dashoffset: 0; }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
