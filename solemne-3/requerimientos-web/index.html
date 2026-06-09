@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Amiga — Contenidos generales del proyecto (VIU 2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5ff;
+    --surface:#ffffff;
+    --ink:#15113a;
+    --ink-soft:#56537a;
+    --navy:#1b1248;
+    --peri:#a8b3ff;
+    --peri-soft:#dfe3ff;
+    --lime:#c2ee3a;
+    --line:#e6e6f4;
+    --display:"Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --body:"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --measure:64ch;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{transition:none !important;} }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit;}
+  :focus-visible{ outline:3px solid var(--navy); outline-offset:2px; border-radius:3px; }
+
+  /* ---------- Header ---------- */
+  .masthead{
+    background:var(--navy);
+    color:#fff;
+    padding:3.5rem 1.5rem 3rem;
+    border-bottom:6px solid var(--lime);
+  }
+  .masthead-inner{ max-width:1080px; margin:0 auto; }
+  .eyebrow{
+    font-family:var(--display);
+    font-size:.78rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--lime);
+    margin:0 0 1rem;
+    font-weight:600;
+  }
+  .masthead h1{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(2rem, 5vw, 3.1rem);
+    line-height:1.05;
+    margin:0 0 .6rem;
+    letter-spacing:-.01em;
+  }
+  .masthead .sub{
+    color:var(--peri);
+    font-size:clamp(1rem,2.2vw,1.2rem);
+    max-width:48ch;
+    margin:0 0 1.5rem;
+  }
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.5rem .75rem;
+    font-family:var(--display);
+    font-size:.8rem; letter-spacing:.03em;
+  }
+  .meta span{
+    border:1px solid rgba(168,179,255,.4);
+    color:var(--peri);
+    padding:.3rem .7rem;
+    border-radius:999px;
+  }
+
+  /* ---------- Layout ---------- */
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 1.5rem;
+    display:grid;
+    grid-template-columns:230px 1fr;
+    gap:3rem;
+    align-items:start;
+  }
+
+  /* ---------- Table of contents ---------- */
+  .toc{
+    position:sticky; top:2rem;
+    margin-top:3rem;
+    font-family:var(--display);
+  }
+  .toc h2{
+    font-size:.72rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 0 1rem; font-weight:600;
+  }
+  .toc ol{ list-style:none; margin:0; padding:0; }
+  .toc li{ margin:0; }
+  .toc a{
+    display:flex; gap:.6rem; align-items:baseline;
+    text-decoration:none;
+    padding:.4rem .55rem;
+    border-radius:7px;
+    font-size:.86rem;
+    color:var(--ink-soft);
+    border-left:2px solid transparent;
+    transition:background .15s, color .15s;
+  }
+  .toc a .rn{ color:var(--peri); font-weight:600; min-width:1.9em; }
+  .toc a:hover{ background:var(--peri-soft); color:var(--ink); }
+  .toc a.active{ background:var(--peri-soft); color:var(--navy); border-left-color:var(--lime); font-weight:600; }
+  .toc a.active .rn{ color:var(--navy); }
+
+  /* ---------- Content ---------- */
+  main{ margin:3rem 0 0; min-width:0; }
+
+  .note{
+    background:var(--peri-soft);
+    border:1px solid var(--peri);
+    border-radius:12px;
+    padding:1rem 1.2rem;
+    font-size:.9rem;
+    color:var(--navy);
+    margin:0 0 2.5rem;
+  }
+  .note strong{ font-family:var(--display); }
+
+  section.point{
+    padding:2.2rem 0;
+    border-top:1px solid var(--line);
+    scroll-margin-top:1.5rem;
+  }
+  section.point:first-of-type{ border-top:none; padding-top:0; }
+
+  .point-head{
+    display:flex; align-items:center; gap:.9rem;
+    margin:0 0 1.1rem;
+  }
+  .rn-chip{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:.85rem;
+    letter-spacing:.05em;
+    background:var(--navy);
+    color:var(--lime);
+    width:2.4rem; height:2.4rem;
+    display:grid; place-items:center;
+    border-radius:9px;
+    flex:none;
+  }
+  .point h2{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(1.15rem,2.6vw,1.5rem);
+    line-height:1.2;
+    margin:0;
+    letter-spacing:-.01em;
+  }
+
+  .point p, .point li{ max-width:var(--measure); }
+  .point p{ margin:0 0 1rem; }
+  .point h3{
+    font-family:var(--display);
+    font-size:1rem; font-weight:600;
+    margin:1.6rem 0 .5rem;
+    color:var(--navy);
+  }
+  .lead{ font-size:1.08rem; }
+
+  ul.clean{ margin:0 0 1rem; padding-left:1.1rem; }
+  ul.clean li{ margin:0 0 .45rem; }
+  ul.clean li::marker{ color:var(--lime); }
+
+  .fix{
+    background:linear-gradient(transparent 62%, rgba(194,238,58,.55) 62%);
+    font-weight:500; padding:0 .1em;
+  }
+
+  /* stat row */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:.8rem;
+    margin:1.2rem 0 1.4rem;
+    max-width:var(--measure);
+  }
+  .stat{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:1rem;
+  }
+  .stat b{
+    font-family:var(--display);
+    display:block; font-size:1.6rem; line-height:1.1;
+    color:var(--navy);
+  }
+  .stat span{ font-size:.82rem; color:var(--ink-soft); }
+
+  /* sub list a-f */
+  ol.sub{
+    list-style:none; counter-reset:sub; margin:.5rem 0 0; padding:0;
+    max-width:var(--measure);
+  }
+  ol.sub > li{
+    counter-increment:sub;
+    position:relative;
+    padding:.85rem 0 .85rem 2.3rem;
+    border-top:1px dashed var(--line);
+  }
+  ol.sub > li::before{
+    content:counter(sub, lower-alpha);
+    position:absolute; left:0; top:.85rem;
+    font-family:var(--display); font-weight:700;
+    color:var(--navy);
+    background:var(--lime);
+    width:1.5rem; height:1.5rem;
+    display:grid; place-items:center;
+    border-radius:6px; font-size:.8rem;
+  }
+  ol.sub b{ font-family:var(--display); font-weight:600; }
+
+  /* tables */
+  .table-scroll{ overflow-x:auto; max-width:var(--measure); margin:.5rem 0 1rem; }
+  table{ border-collapse:collapse; width:100%; font-size:.88rem; }
+  th, td{ text-align:left; padding:.6rem .7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{
+    font-family:var(--display); font-size:.74rem; letter-spacing:.04em;
+    text-transform:uppercase; color:var(--ink-soft); border-bottom:2px solid var(--navy);
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.amt{ font-family:var(--display); white-space:nowrap; color:var(--navy); }
+  tr.total td{ border-top:2px solid var(--navy); font-weight:600; }
+
+  /* ---------- Footer ---------- */
+  footer{
+    max-width:1080px; margin:2rem auto 0; padding:2rem 1.5rem 3.5rem;
+    border-top:1px solid var(--line);
+    color:var(--ink-soft); font-size:.82rem;
+  }
+  footer .who{ font-family:var(--display); color:var(--ink); font-size:.9rem; margin:0 0 .4rem; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:820px){
+    .wrap{ grid-template-columns:1fr; gap:0; }
+    .toc{
+      position:static; margin-top:2rem;
+      border:1px solid var(--line); border-radius:12px; padding:1rem 1.2rem;
+      background:var(--surface);
+    }
+    .toc ol{ columns:2; column-gap:1.2rem; }
+    main{ margin-top:2rem; }
+  }
+  @media (max-width:480px){
+    .toc ol{ columns:1; }
+    .masthead{ padding:2.5rem 1.25rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <p class="eyebrow">Concurso VIU 2026 · Contenidos generales del proyecto formulado</p>
+    <h1>Red Amiga</h1>
+    <p class="sub">Navegando el espacio público: navegación urbana accesible e inclusiva para personas con movilidad reducida.</p>
+    <div class="meta">
+      <span>ANID · Subdirección de Investigación Aplicada</span>
+      <span>Plazo: 12 meses</span>
+      <span>Solicitado: hasta $36.000.000</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- TOC -->
+  <nav class="toc" aria-label="Índice de contenidos">
+    <h2>Contenidos</h2>
+    <ol>
+      <li><a href="#s1"><span class="rn">i.</span> Resumen ejecutivo</a></li>
+      <li><a href="#s2"><span class="rn">ii.</span> Problema y oportunidad</a></li>
+      <li><a href="#s3"><span class="rn">iii.</span> Solución y mérito C&amp;T</a></li>
+      <li><a href="#s4"><span class="rn">iv.</span> Mercado y usuarios</a></li>
+      <li><a href="#s5"><span class="rn">v.</span> Ventajas y atributos</a></li>
+      <li><a href="#s6"><span class="rn">vi.</span> Impactos esperados</a></li>
+      <li><a href="#s7"><span class="rn">vii.</span> Resultados por madurez</a></li>
+      <li><a href="#s8"><span class="rn">viii.</span> Plan, presupuesto y financiamiento</a></li>
+      <li><a href="#s9"><span class="rn">ix.</span> Equipos de soporte</a></li>
+    </ol>
+  </nav>
+
+  <!-- Content -->
+  <main>
+
+    <p class="note"><strong>Borrador para ajustar.</strong> Los textos resaltados con <span class="fix">fondo lima</span> son supuestos que debes adaptar a tu realidad: memoria/tesis de origen, TRL real, institución beneficiaria, nombres del equipo y montos. Cifras de población: III ENDISC 2022 (SENADIS / MDSF).</p>
+
+    <!-- i -->
+    <section class="point" id="s1">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">i</span><h2>Resumen ejecutivo</h2></div>
+      <p class="lead">Red Amiga es una aplicación de navegación urbana diseñada para personas con movilidad reducida que calcula rutas peatonales <strong>accesibles</strong>, considerando barreras arquitectónicas, pendientes, tipo de superficie y presencia de rampas o ascensores: variables que los navegadores tradicionales (Google Maps, Waze) ignoran.</p>
+      <p>La propuesta parte de una premisa: la discapacidad no es un atributo de la persona, sino una situación generada por un entorno mal diseñado. Red Amiga actúa en dos frentes: un <strong>motor de ruteo multicriterio</strong> que optimiza la trayectoria según el perfil del usuario (silla manual o eléctrica, bastón/andador, baja visión) y una <strong>plataforma de participación ciudadana</strong> para reportar en tiempo real obstáculos e incumplimientos normativos, generando una base de datos viva de accesibilidad que también sirve de insumo de fiscalización.</p>
+      <p>La base científico-tecnológica proviene de <span class="fix">la memoria/proyecto de título de los integrantes</span>, donde se desarrolló el modelo de datos de accesibilidad y la función de costo de la red peatonal. El proyecto busca llevar este resultado desde un prototipo de concepto <span class="fix">(TRL 3)</span> hasta un piloto validado en condiciones reales en una comuna de Santiago (TRL 5–6), con financiamiento ANID de hasta $36.000.000 y aporte de la beneficiaria de al menos el 20% del costo total.</p>
+    </section>
+
+    <!-- ii -->
+    <section class="point" id="s2">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">ii</span><h2>Problema, necesidad u oportunidad <span style="font-weight:400;color:var(--ink-soft);font-size:.8em;">(impacto, magnitud y vigencia)</span></h2></div>
+      <p><strong>El problema.</strong> Las personas con movilidad reducida, en especial la personas en sillas de ruedas, son más susceptibles a enfrentar dificultades debido al mal diseño de la infraestuctura vial y a las malas condiciones del camino. Esto expone a las personas a mayores niveles de estrés debido a las soluciones que deben fabricar para enfrentar estos problemas de maneras no óptimas. El resultado es la exclusión de la vida urbana.</p>
+      <h3>Magnitud (III ENDISC 2022)</h3>
+      <div class="stats">
+        <div class="stat"><b>3.291.602</b><span>personas con discapacidad en Chile (17% de la población de 2+ años)</span></div>
+        <div class="stat"><b>2.703.893</b><span>adultos con discapacidad (17,6% de los 18+)</span></div>
+        <div class="stat"><b>~1.400.000</b><span>en la Región Metropolitana (piloto), 18,3% de adultos</span></div>
+        <div class="stat"><b>51%</b><span>participación laboral, vs. 71,1% sin discapacidad</span></div>
+      </div>
+      <p>A esto se suma la movilidad reducida transitoria o circunstancial: personas mayores (prevalencia de 32,6% sobre los 60 años), lesiones temporales, embarazo y cuidadores con coches. El mercado direccionable es sustancialmente mayor que la cifra de discapacidad permanente.</p>
+      <p><strong>Vigencia.</strong> El marco normativo está vigente y respalda el problema: la Ley 20.422 y la OGUC/DS 50 fijan estándares exigibles (ancho de rampa ≥ 0,90 m, pendiente máxima 8–12%, superficies antideslizantes), que se incumplen masivamente sin un mecanismo ciudadano de detección. Existe además una brecha de mercado: Wheelmap y AccessNow mapean lugares accesibles, pero ninguno resuelve el <strong>ruteo punto a punto</strong>.</p>
+    </section>
+
+    <!-- iii -->
+    <section class="point" id="s3">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">iii</span><h2>Descripción de la solución, mérito y justificación científico-tecnológica</h2></div>
+      <p><strong>La solución</strong> integra cuatro componentes:</p>
+      <ul class="clean">
+        <li><strong>Motor de rutas accesibles personalizadas:</strong> algoritmo de ruteo sobre una red peatonal enriquecida con atributos de accesibilidad, que asigna un costo a cada segmento (pendiente, ancho, superficie, rampa/ascensor, obstáculos) y optimiza la trayectoria de <em>menor barrera</em> para el perfil del usuario.</li>
+        <li><strong>Mapa de accesibilidad:</strong> capa visual con rampas, ascensores, superficies aptas y puntos críticos.</li>
+        <li><strong>Alertas ciudadanas en tiempo real:</strong> reportes que actualizan inmediatamente el grafo (vía en mal estado, ausencia de elemento básico, estructura en mantenimiento).</li>
+        <li><strong>Plataforma de fiscalización:</strong> los reportes de incumplimiento (p. ej. una rampa que excede el 12% del DS 50) se sistematizan para seguimiento ante autoridades.</li>
+      </ul>
+      <p><strong>Mérito C&amp;T.</strong> El núcleo de innovación no es la interfaz, sino cómo se construye y mantiene actualizado el grafo de accesibilidad. La literatura demuestra que el dato de accesibilidad es dinámico y costoso de levantar de forma centralizada, y que el <em>geocrowdsourcing</em> —combinar capas oficiales con reportes ciudadanos validados— es la estrategia más viable (Qin et al., 2015, 2017; Riganova et al., 2017; Witzel et al., 2023). El aporte de Red Amiga es integrar ese modelo de datos con un algoritmo de ruteo multicriterio basado en <em>wayfinding</em> de diseño universal (Fogli et al., 2019) y una arquitectura móvil validada para usuarios con discapacidad (Sweidan et al., 2025), anclada al marco normativo chileno.</p>
+    </section>
+
+    <!-- iv -->
+    <section class="point" id="s4">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">iv</span><h2>Tamaño del segmento de mercado, clientes y usuarios</h2></div>
+      <h3>Usuarios (B2C)</h3>
+      <ul class="clean">
+        <li><strong>Segmento núcleo:</strong> personas con discapacidad física/movilidad reducida (cientos de miles a nivel nacional).</li>
+        <li><strong>Mercado inicial (piloto):</strong> Región Metropolitana, ~1,4 millones de adultos con discapacidad; foco en <span class="fix">1–2 comunas piloto</span>.</li>
+        <li><strong>Segmento ampliado:</strong> personas mayores, movilidad reducida transitoria y cuidadores.</li>
+      </ul>
+      <h3>Clientes (ingreso, B2B/B2G)</h3>
+      <p>El modelo no monetiza al usuario vulnerable, sino el valor del dato y de la herramienta de cumplimiento: municipios (auditoría y priorización de inversión), MINVU/SERVIU y SENADIS (política pública y cumplimiento OGUC/DS 50), operadores de transporte, inmobiliarias, retail, universidades y hospitales.</p>
+      <p><strong>Dimensionamiento (TAM / SAM / SOM):</strong> <span class="fix">completar con estimaciones propias; el panel valora que las cifras estén calculadas, no solo declaradas.</span></p>
+    </section>
+
+    <!-- v -->
+    <section class="point" id="s5">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">v</span><h2>Ventajas o atributos para el segmento</h2></div>
+      <ul class="clean">
+        <li><strong>Ruteo con criterio de accesibilidad real</strong>, no solo mapeo de lugares (diferencia clave frente a Wheelmap/AccessNow).</li>
+        <li><strong>Personalización por perfil:</strong> la misma calle puede ser ruta válida para un perfil y barrera para otro.</li>
+        <li><strong>Dato siempre vigente</strong> por geocrowdsourcing: un ascensor que falla hoy cambia la ruta hoy.</li>
+        <li><strong>Anclaje normativo chileno:</strong> cada alerta se evalúa contra el DS 50/OGUC, convirtiéndose en evidencia de (in)cumplimiento.</li>
+        <li><strong>Doble valor:</strong> navegación para el usuario + base de datos de fiscalización para clientes institucionales.</li>
+        <li><strong>Interfaz accesible:</strong> modo oscuro de alto contraste validado con usuarios de baja visión.</li>
+        <li><strong>Efecto de red:</strong> cada usuario que reporta mejora la utilidad para todos (barrera de entrada).</li>
+      </ul>
+    </section>
+
+    <!-- vi -->
+    <section class="point" id="s6">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">vi</span><h2>Impactos económicos, sociales y medioambientales esperados</h2></div>
+      <h3>Sociales (impacto principal)</h3>
+      <ul class="clean">
+        <li>Mayor autonomía y movilidad: más salidas semanales al espacio público sin depender de terceros.</li>
+        <li>Reducción del tiempo y la carga cognitiva/estrés al planificar trayectos.</li>
+        <li>Mayor participación laboral, educativa y social, incidiendo en la brecha de empleo (51% vs. 71,1%).</li>
+        <li>Datos georreferenciados para priorizar inversión pública en accesibilidad.</li>
+      </ul>
+      <h3>Económicos</h3>
+      <ul class="clean">
+        <li>Creación de una EBCT con ingresos por servicios de datos y cumplimiento a clientes B2B/B2G.</li>
+        <li>Ahorro municipal al priorizar inversión donde mayor es el impacto en transitabilidad.</li>
+      </ul>
+      <h3>Medioambientales</h3>
+      <ul class="clean">
+        <li>Fomento de la movilidad peatonal y activa frente al uso del vehículo particular.</li>
+      </ul>
+    </section>
+
+    <!-- vii -->
+    <section class="point" id="s7">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">vii</span><h2>Resultados según niveles de madurez (Anexo 2), estrategia y plan de validación</h2></div>
+      <p><strong>Autodiagnóstico IRL de partida → meta</strong> <span class="fix">(ajustar a la realidad del equipo):</span> TRL 3 → 5–6 · CRL 3–4 → 6 · BRL 2–3 → 5 · IPRL 2 → 4–5 · TMRL 4–5 → 6 · FRL 3 → 5–6.</p>
+      <ol class="sub">
+        <li><b>Tecnologías de producto, proceso o servicio.</b> MVP funcional con motor de ruteo operativo sobre el grafo de la comuna piloto, mapa de accesibilidad y módulo de alertas. Validación: pruebas de transitabilidad real de las rutas calculadas vs. recorrido efectivo de usuarios. <em>Verificación:</em> MVP desplegado + informe de pruebas (eleva a TRL 5–6).</li>
+        <li><b>Estrategia de propiedad intelectual.</b> Registro de la marca "Red Amiga" en INAPI; estudio de <em>freedom to operate</em>; protección del software por derecho de autor y del modelo de datos por secreto industrial. <em>Verificación:</em> solicitud de marca presentada + informe de estrategia con la OTL.</li>
+        <li><b>Validación del modelo de negocios.</b> Canvas validado con <span class="fix">1–2 municipios</span> y entrevistas a clientes B2B/B2G; primera versión del modelo de ingresos. <em>Verificación:</em> cartas de intención y modelo de ingresos documentado (BRL 5).</li>
+        <li><b>Estrategia de financiamiento.</b> Plan post-VIU con fuentes identificadas (Corfo SSAF/Startup, capital semilla, fondos de innovación pública). <em>Verificación:</em> plan + <em>pitch</em> de inversión ensayado.</li>
+        <li><b>Equipo de trabajo y desarrollo de capacidades.</b> Equipo fundador con roles definidos (dirección, desarrollo, negocios/UX accesibilidad) reforzado con desarrollador y mentoría. <em>Verificación:</em> acuerdo de roles firmado.</li>
+        <li><b>Demostración del valor frente a usuarios/clientes.</b> Protocolo cualitativo 1:1 con técnica <em>Think-Aloud</em> (30–45 min) sobre el prototipo en Figma desde celular, con tres perfiles (silla de ruedas; andador/bastón; baja visión moderada). Métricas: usabilidad, carga cognitiva/estrés y observación etnográfica. <em>Verificación:</em> informe de resultados + actividad de difusión.</li>
+      </ol>
+    </section>
+
+    <!-- viii -->
+    <section class="point" id="s8">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">viii</span><h2>Plan de trabajo, presupuesto y fuentes de financiamiento</h2></div>
+      <h3>Carta Gantt resumida (12 meses)</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Hito</th><th>Meses</th><th>Resultado clave</th></tr></thead>
+          <tbody>
+            <tr><td>Modelo de datos y grafo de accesibilidad</td><td>1–3</td><td>Grafo enriquecido + capas oficiales</td></tr>
+            <tr><td>Desarrollo del MVP (ruteo + mapa + alertas)</td><td>2–6</td><td>App funcional (TRL 4→5)</td></tr>
+            <tr><td>Estrategia y registro de PI</td><td>3–5</td><td>Marca solicitada en INAPI</td></tr>
+            <tr><td>Validación con usuarios (Think-Aloud)</td><td>5–8</td><td>Informe de usabilidad</td></tr>
+            <tr><td>Piloto en terreno</td><td>7–10</td><td>Piloto validado (TRL 5–6)</td></tr>
+            <tr><td>Validación del modelo de negocio</td><td>6–11</td><td>Cartas de interés + ingresos</td></tr>
+            <tr><td>Plan de financiamiento y difusión / cierre</td><td>10–12</td><td>Plan post-VIU + informe final</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Presupuesto referencial <span class="fix">(ajustar montos)</span></h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Ítem</th><th>Aporte ANID</th><th>Detalle</th></tr></thead>
+          <tbody>
+            <tr><td>Gastos en personal</td><td class="amt">~$20.000.000</td><td>Director/a (≤$500.000/mes), desarrollador/a, profesor/a guía (≤$200.000/mes)</td></tr>
+            <tr><td>Equipamiento</td><td class="amt">~$3.000.000</td><td>Equipos, dispositivos de prueba, créditos cloud</td></tr>
+            <tr><td>Operación</td><td class="amt">~$10.000.000</td><td>Hosting, cartografía, validación, PI/marca, asesorías, difusión</td></tr>
+            <tr><td>Administración superior</td><td class="amt">~$3.000.000</td><td>≤ 15% del subsidio ANID</td></tr>
+            <tr class="total"><td>Total ANID</td><td class="amt">~$36.000.000</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Aporte de la institución beneficiaria (≥ 20% del costo total):</strong> valorizado en horas de mentor de negocios, uso de laboratorios e infraestructura, gestión de la OTL y horas del profesor guía. Con un costo total de ~$45M, el aporte debe ser ≥ ~$9M.</p>
+      <p><strong>Fuentes:</strong> subsidio ANID-VIU (principal) + aporte valorizado de la beneficiaria + financiamiento complementario futuro identificado en la estrategia FRL.</p>
+    </section>
+
+    <!-- ix -->
+    <section class="point" id="s9">
+      <div class="point-head"><span class="rn-chip" aria-hidden="true">ix</span><h2>Equipos técnicos y financieros de la beneficiaria que darán soporte</h2></div>
+      <ul class="clean">
+        <li><strong>Dirección del proyecto:</strong> <span class="fix">estudiante/egresado/a director(a)</span> — gestión técnica y financiera ante ANID.</li>
+        <li><strong>Investigador/a asociado/a o profesor/a guía:</strong> <span class="fix">docente</span> — soporte C&amp;T (mín. 20 h/mes), con trayectoria en I+D en los últimos 5 años.</li>
+        <li><strong>Mentor/a de negocios:</strong> <span class="fix">incubadora / OTL / sector productivo</span> — aporte valorizado, no se contrata con recursos ANID.</li>
+        <li><strong>OTL / Incubadora:</strong> <span class="fix">nombre</span> — gestión de PI, modelo de negocio y vinculación con el ecosistema.</li>
+        <li><strong>Soporte financiero-contable:</strong> <span class="fix">profesional de finanzas</span> — rendición SISREC, gestión presupuestaria y seguimiento del convenio.</li>
+        <li><strong>Capacidades e infraestructura:</strong> laboratorios, equipamiento existente, licencias de software y difusión institucional.</li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p class="who">Red Amiga · Victoria Deutelmoser, Santiago Gaete y Florencia Vásquez</p>
+  <p>Contenidos generales del proyecto formulado (Concurso VIU 2026, sección V.1.d). Cifras de población: III Estudio Nacional de la Discapacidad (III ENDISC 2022), SENADIS / Ministerio de Desarrollo Social y Familia. Referencias C&amp;T: Fogli et al. (2019); Qin et al. (2015, 2017); Riganova et al. (2017); Sweidan et al. (2025); Witzel et al. (2023).</p>
+</footer>
+
+<script>
+  // Resaltar el ítem activo del índice según la sección visible
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    var map = {};
+    links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+    var sections = Array.prototype.slice.call(document.querySelectorAll('section.point'));
+    if(!('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          var active = map[e.target.id];
+          if(active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    sections.forEach(function(s){ obs.observe(s); });
+  })();
+</script>
+
+</body>
+</html>
